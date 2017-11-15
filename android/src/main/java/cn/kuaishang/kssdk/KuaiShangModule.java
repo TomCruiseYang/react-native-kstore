@@ -1,4 +1,4 @@
-package com.zoom.react_ks;
+package cn.kuaishang.kssdk;
 
 import android.app.Activity;
 import android.content.Intent;

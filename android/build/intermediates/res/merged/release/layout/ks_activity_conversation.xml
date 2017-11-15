@@ -21,7 +21,7 @@
                 android:id="@+id/messages_lv"
                 style="@style/KSMatchMatch"
                 android:layout_below="@+id/title_tip_tv"
-                android:background="@color/ks_activity_bg"
+                android:background="#f4f4f4"
                 android:cacheColorHint="#00000000"
                 android:divider="#00000000"
                 android:listSelector="@android:color/transparent"
@@ -167,15 +167,7 @@
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
         android:background="#F5F3F4">
-        <include layout="@layout/ks_line_horizontal"/>
-        <TextView
-            style="@style/KSMatchWrap"
-            android:paddingTop="@dimen/ks_size_level2"
-            android:paddingBottom="@dimen/ks_size_level2"
-            android:gravity="center"
-            android:text="@string/ks_tip_powered_by"
-            android:textSize="@dimen/ks_textSize_level1"
-            android:textColor="#D4D4D4"/>
+        <!--<include layout="@layout/ks_line_horizontal"/>-->
     </LinearLayout>
 
     <ProgressBar

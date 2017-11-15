@@ -2688,8 +2688,6 @@ containing a value of this type.
         public static int KSAutoWrap=0x7f0a00be;
         public static int KSAutoWrap_Horizontal=0x7f0a00bf;
         public static int KSAutoWrap_Vertical=0x7f0a00c0;
-        /** <item name="android:backgroundDimEnabled">false</item>
-         */
         public static int KSDialog=0x7f0a00c1;
         public static int KSHLine=0x7f0a00c2;
         public static int KSMatchAuto=0x7f0a00c3;

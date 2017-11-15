@@ -1,4 +1,4 @@
-package com.zoom.react_ks;
+package cn.kuaishang.kssdk;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
