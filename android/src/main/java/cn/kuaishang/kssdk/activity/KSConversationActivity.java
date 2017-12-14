@@ -1,12 +1,17 @@
 package cn.kuaishang.kssdk.activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
@@ -719,18 +724,57 @@ public class KSConversationActivity extends KSBaseActivity implements View.OnCli
     private float mTime;
     private float downY;
     private boolean hasPrepare = false;
+    private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 0x12;
+    private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0x21;
+    private static final int PERMISSIONS_REQUEST_CAMERA = 0x22;
+
+    private void checkAudioPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSIONS_REQUEST_RECORD_AUDIO);
+            Toast.makeText(this, R.string.ks_permission_audio_explanation, Toast.LENGTH_SHORT).show();
+        }else{
+            hasPrepare = mAudioRecorder.prepareAudio();
+            mIsOvertime = false;
+            mHasPermission = true;
+            changeState(STATE_RECORDING);
+            mPop.showAtLocation(findViewById(R.id.contentLayout), Gravity.CENTER,0,0);
+            mIsRecording = true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Map<String,Object> data = new HashMap<String, Object>();
+                    data.put(KSKey.CLASS, KSConversationActivity.class);
+                    KSUIUtil.openActivity(this, data, AlbumBucketActivity.class);
+                }
+                return;
+            }
+            case PERMISSIONS_REQUEST_CAMERA: {
+                if (grantResults.length > 0){
+                    camerafile = KSUIUtil.openCameraActivity(mContext);
+                }
+                return;
+            }
+        }
+    }
+
     private View.OnTouchListener voiceListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    hasPrepare = mAudioRecorder.prepareAudio();
                     downY = (int) event.getY();
-                    mIsOvertime = false;
-                    mHasPermission = true;
-                    changeState(STATE_RECORDING);
-                    mPop.showAtLocation(findViewById(R.id.contentLayout), Gravity.CENTER,0,0);
-                    mIsRecording = true;
+                    checkAudioPermission();
                     break;
                 case MotionEvent.ACTION_MOVE:
                     if (!mIsOvertime && mIsRecording && mHasPermission) {

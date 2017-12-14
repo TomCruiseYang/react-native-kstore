@@ -1,11 +1,16 @@
 package cn.kuaishang.kssdk.widget;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -28,6 +33,9 @@ public class KSCustomKeyboardLayout extends KSBaseCustomCompositeView {
     private static final int WHAT_SCROLL_CONTENT_TO_BOTTOM = 1;
     private static final int WHAT_CHANGE_TO_EMOTION_KEYBOARD = 2;
     private static final int WHAT_CHANGE_TO_FUNCTION_KEYBOARD = 3;
+
+    private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0x21;
+    private static final int PERMISSIONS_REQUEST_CAMERA = 0x22;
 
     private KSEmotionKeyboardLayout mEmotionKeyboardLayout;
     private KSFunctionKeyboardLayout mFunctionKeyboardLayout;
@@ -79,15 +87,13 @@ public class KSCustomKeyboardLayout extends KSBaseCustomCompositeView {
             @Override
             public void onPhotoClick() {
                 closeAllKeyboard();
-                Map<String,Object> data = new HashMap<String, Object>();
-                data.put(KSKey.CLASS, KSConversationActivity.class);
-                KSUIUtil.openActivity(mActivity, data, AlbumBucketActivity.class);
+                checkStoragePermission();
             }
 
             @Override
             public void onCameraClick() {
                 closeAllKeyboard();
-                mCallback.openCamera();
+                checkCameraPermission();
             }
 
             @Override
@@ -102,6 +108,33 @@ public class KSCustomKeyboardLayout extends KSBaseCustomCompositeView {
                 dialog.show();
             }
         });
+    }
+
+    private void checkStoragePermission() {
+        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(mActivity,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            Toast.makeText(mActivity, R.string.ks_permission_storage_explanation, Toast.LENGTH_SHORT).show();
+        }else{
+            closeAllKeyboard();
+            Map<String,Object> data = new HashMap<String, Object>();
+            data.put(KSKey.CLASS, KSConversationActivity.class);
+            KSUIUtil.openActivity(mActivity, data, AlbumBucketActivity.class);
+        }
+    }
+
+    private void checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(mActivity,
+                    new String[]{Manifest.permission.CAMERA},
+                    PERMISSIONS_REQUEST_CAMERA);
+            Toast.makeText(mActivity, R.string.ks_permission_camera_explanation, Toast.LENGTH_SHORT).show();
+        }else{
+            mCallback.openCamera();
+        }
     }
 
     @Override

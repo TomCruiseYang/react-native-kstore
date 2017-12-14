@@ -145,4 +145,7 @@
 
     <string name="ks_nosdcard">sd卡不可用，请重试</string>
 
+    <string name="ks_permission_audio_explanation">语音聊天需要录制音频和存储权限</string>
+    <string name="ks_permission_storage_explanation">打开相册需要访问存储权限</string>
+    <string name="ks_permission_camera_explanation">拍摄照片需要相机权限</string>
 </resources>
