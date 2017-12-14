@@ -1,11 +1,19 @@
 {
   "name": "react-native-kstore",
-  "version": "0.0.1",
+  "version": "0.0.6",
   "description": "customer service",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "y",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TomCruiseYang/react-native-kstore.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TomCruiseYang/react-native-kstore/issues"
+  },
+  "homepage": "https://github.com/TomCruiseYang/react-native-kstore#readme"
 }
